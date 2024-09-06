@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'イーライフ見積もりシステム',
       theme: ThemeData(
         useMaterial3: true,
+        fontFamily: 'Zen_Kaku_Gothic_Antique',
       ),
       home: const EstimateListPage(),
     );
