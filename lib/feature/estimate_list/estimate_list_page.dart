@@ -1,5 +1,6 @@
 import 'package:e_life_system/common/color/color_style.dart';
 import 'package:e_life_system/common/margin/height_margin.dart';
+import 'package:e_life_system/feature/estimate_create/estimate_create_page.dart';
 import 'package:e_life_system/feature/estimate_list/component/estimate_tile.dart';
 import 'package:e_life_system/feature/estimate_list/component/item_title_text.dart';
 import 'package:e_life_system/feature/estimate_list/component/search_text_form_field.dart';
@@ -14,6 +15,7 @@ class EstimateListPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final TextEditingController controller = useTextEditingController();
     final Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: ColorStyle.white,
       appBar: AppBar(
@@ -56,7 +58,15 @@ class EstimateListPage extends HookConsumerWidget {
                 SizedBox(
                   height: 40,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const EstimateCreatePage();
+                          },
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       backgroundColor: ColorStyle.mainPink,
