@@ -5,6 +5,7 @@ import 'package:e_life_system/feature/estimate_create/component/label_and_text_f
 import 'package:e_life_system/feature/estimate_create/component/page_title_text.dart';
 import 'package:e_life_system/feature/estimate_create/component/table_item_title.dart';
 import 'package:e_life_system/feature/estimate_create/component/table_text_form_field.dart';
+import 'package:e_life_system/function/custom_pink_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -342,30 +343,10 @@ class EstimateCreatePage extends HookConsumerWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 40,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        backgroundColor: ColorStyle.mainPink,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 72.0),
-                        child: Text(
-                          '保存',
-                          style: TextStyle(
-                            color: ColorStyle.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                      ),
-                    ),
+                  CustomPinkButton(
+                    title: '保存',
+                    titlePadding: 72.0,
+                    onPressed: () {},
                   ),
                 ],
               ),

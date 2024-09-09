@@ -4,6 +4,7 @@ import 'package:e_life_system/feature/estimate_create/estimate_create_page.dart'
 import 'package:e_life_system/feature/estimate_list/component/estimate_tile.dart';
 import 'package:e_life_system/feature/estimate_list/component/item_title_text.dart';
 import 'package:e_life_system/feature/estimate_list/component/search_text_form_field.dart';
+import 'package:e_life_system/function/custom_pink_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -55,35 +56,17 @@ class EstimateListPage extends HookConsumerWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(
-                  height: 40,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const EstimateCreatePage();
-                          },
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      backgroundColor: ColorStyle.mainPink,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
+                CustomPinkButton(
+                  title: '＋見積書を作成する',
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const EstimateCreatePage();
+                        },
                       ),
-                    ),
-                    child: const Text(
-                      '＋見積書を作成する',
-                      style: TextStyle(
-                        color: ColorStyle.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -119,18 +102,11 @@ class EstimateListPage extends HookConsumerWidget {
               color: ColorStyle.mainGrey,
               height: 1,
             ),
-            const Expanded(
+            Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    EstimateTile(),
-                    EstimateTile(),
-                    EstimateTile(),
-                    EstimateTile(),
-                    EstimateTile(),
-                    EstimateTile(),
-                    EstimateTile(),
-                    EstimateTile(),
+                    for (int i = 0; i < 10; i++) EstimateTile(index: i),
                   ],
                 ),
               ),
