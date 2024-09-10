@@ -5,6 +5,7 @@ import 'package:e_life_system/feature/estimate_create/component/label_and_text_f
 import 'package:e_life_system/feature/estimate_create/component/page_title_text.dart';
 import 'package:e_life_system/feature/estimate_create/component/table_item_title.dart';
 import 'package:e_life_system/feature/estimate_create/component/table_text_form_field.dart';
+import 'package:e_life_system/feature/estimate_create/component/total_money_table_row.dart';
 import 'package:e_life_system/function/custom_pink_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -16,12 +17,45 @@ class EstimateCreatePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
-    final TextEditingController controller = useTextEditingController();
+
+    final TextEditingController titleController =
+        useTextEditingController(); //見積もり件名
+    final TextEditingController doDateController =
+        useTextEditingController(); //施行期日
+    final TextEditingController validPeriodController =
+        useTextEditingController(); //見積有効期間
+    final TextEditingController estimateNumberController =
+        useTextEditingController(); //見積番号
+
+    final ValueNotifier<List<List<TextEditingController>>> controllers =
+        useState([]);
+    final totalAmounts = useState<List<int>>([]);
+
+    // 小計、消費税、合計を計算するValueNotifier
+    final ValueNotifier<int> subtotal = useState(0);
+    final ValueNotifier<int> tax = useState(0);
+    final ValueNotifier<int> total = useState(0);
+
+    useEffect(() {
+      controllers.value = [_createNewRow()];
+      totalAmounts.value = [0];
+      return null;
+    }, []);
+
+    // totalAmountsが変更されるたびに小計、消費税、合計を再計算
+    useEffect(() {
+      subtotal.value = _calculateTotalAmount(totalAmounts.value);
+      tax.value = _calculateTax(subtotal.value, 0.1);
+      total.value = subtotal.value + tax.value;
+
+      return null;
+    }, [totalAmounts.value]);
 
     return Scaffold(
       backgroundColor: ColorStyle.white,
       appBar: AppBar(
         toolbarHeight: 80,
+        surfaceTintColor: ColorStyle.white,
         backgroundColor: ColorStyle.white,
         shape: Border(
           bottom: BorderSide(
@@ -75,24 +109,24 @@ class EstimateCreatePage extends HookConsumerWidget {
                     HeightMargin.large,
                     const PageTitleText(title: '見積情報'),
                     LabelAndTextFormField(
-                      controller: controller,
+                      controller: titleController,
                       title: '見積件名',
                       isRequired: true,
                       maxLength: 50,
                     ),
                     LabelAndTextFormField(
-                      controller: controller,
+                      controller: doDateController,
                       title: '施行期日',
                       counterText: '',
                       isRequired: true,
                     ),
                     LabelAndTextFormField(
-                      controller: controller,
+                      controller: validPeriodController,
                       title: '見積有効期間',
                       counterText: '',
                     ),
                     LabelAndTextFormField(
-                      controller: controller,
+                      controller: estimateNumberController,
                       title: '見積番号',
                       maxLength: 20,
                     ),
@@ -120,48 +154,39 @@ class EstimateCreatePage extends HookConsumerWidget {
                             TableItemTitle(title: '金額'),
                           ],
                         ),
-                        TableRow(
-                          children: [
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(
-                              controller: controller,
-                              isReadOnly: true,
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(
-                              controller: controller,
-                              isReadOnly: true,
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(controller: controller),
-                            TableTextFormField(
-                              controller: controller,
-                              isReadOnly: true,
-                            ),
-                          ],
-                        ),
+                        for (int i = 0; i < controllers.value.length; i++)
+                          TableRow(
+                            children: [
+                              TableTextFormField(
+                                  controller: controllers.value[i][0]),
+                              TableTextFormField(
+                                controller: controllers.value[i][1],
+                                onChanged: (_) => _calculateAmount(
+                                    i, controllers, totalAmounts),
+                              ),
+                              TableTextFormField(
+                                controller: controllers.value[i][2],
+                              ),
+                              TableTextFormField(
+                                controller: controllers.value[i][3],
+                                onChanged: (_) => _calculateAmount(
+                                    i, controllers, totalAmounts),
+                              ),
+                              TableTextFormField(
+                                totalAmount: totalAmounts.value[i],
+                                controller: controllers.value[i][4],
+                                isReadOnly: true, // 金額は読み取り専用
+                              ),
+                            ],
+                          )
                       ],
                     ),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          _addNewRow(controllers, totalAmounts);
+                        },
                         child: Container(
                           height: 50,
                           width: 150,
@@ -199,93 +224,18 @@ class EstimateCreatePage extends HookConsumerWidget {
                             width: 1,
                           ),
                           children: [
-                            TableRow(
-                              children: [
-                                Container(
-                                  height: 50,
-                                  color: ColorStyle.white,
-                                  child: const Center(
-                                    child: Text(
-                                      '小計',
-                                      style: TextStyle(
-                                        color: ColorStyle.mainBlack,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 50,
-                                  color: ColorStyle.white,
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text('3,000'),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            TableRow(
-                              children: [
-                                Container(
-                                  height: 50,
-                                  color: ColorStyle.white,
-                                  child: const Center(
-                                    child: Text(
-                                      '消費税(10％)',
-                                      style: TextStyle(
-                                        color: ColorStyle.mainBlack,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 50,
-                                  color: ColorStyle.white,
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text('3,000'),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            TableRow(
-                              children: [
-                                Container(
-                                  height: 50,
-                                  color: ColorStyle.white,
-                                  child: const Center(
-                                    child: Text(
-                                      '合計',
-                                      style: TextStyle(
-                                        color: ColorStyle.mainBlack,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 50,
-                                  color: ColorStyle.white,
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text('3,000'),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            TotalMoneyTableRow(
+                              label: '小計',
+                              result: subtotal.value,
+                            ).toTableRow(),
+                            TotalMoneyTableRow(
+                              label: '消費税(10％)',
+                              result: tax.value,
+                            ).toTableRow(),
+                            TotalMoneyTableRow(
+                              label: '合計',
+                              result: total.value,
+                            ).toTableRow(),
                           ],
                         ),
                       ),
@@ -309,11 +259,11 @@ class EstimateCreatePage extends HookConsumerWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     height: 60,
                     color: ColorStyle.white,
-                    child: const Center(
+                    child: Center(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
+                          const Text(
                             '合計金額',
                             style: TextStyle(
                               color: ColorStyle.mainBlack,
@@ -323,15 +273,15 @@ class EstimateCreatePage extends HookConsumerWidget {
                           ),
                           WidthMargin.xLarge,
                           Text(
-                            '300,000',
-                            style: TextStyle(
+                            total.value.toString(),
+                            style: const TextStyle(
                               color: ColorStyle.mainBlack,
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           WidthMargin.mini,
-                          Text(
+                          const Text(
                             '円',
                             style: TextStyle(
                               color: ColorStyle.mainBlack,
@@ -355,5 +305,58 @@ class EstimateCreatePage extends HookConsumerWidget {
         ],
       ),
     );
+  }
+
+// 新しい行を追加するメソッド
+  List<TextEditingController> _createNewRow() {
+    return List.generate(5, (_) => TextEditingController());
+  }
+
+  void _addNewRow(ValueNotifier<List<List<TextEditingController>>> controllers,
+      ValueNotifier<List<int>> totalAmounts) {
+    controllers.value = [...controllers.value, _createNewRow()];
+    totalAmounts.value = [...totalAmounts.value, 0];
+  }
+
+//各行の金額を計算するメソッド
+  void _calculateAmount(
+      int index,
+      ValueNotifier<List<List<TextEditingController>>> controllers,
+      ValueNotifier<List<int>> totalAmounts) {
+    final quantityController = controllers.value[index][1];
+    final unitPriceController = controllers.value[index][3];
+    final amountController = controllers.value[index][4];
+
+    if (quantityController.text.isNotEmpty &&
+        unitPriceController.text.isNotEmpty) {
+      final quantity = int.tryParse(quantityController.text) ?? 0;
+      final unitPrice = int.tryParse(unitPriceController.text) ?? 0;
+
+      final amount = quantity * unitPrice;
+
+      // 計算結果を金額フィールドにセット
+      amountController.text = amount.toString();
+
+      // totalAmountsを更新
+      final newTotalAmounts = List<int>.from(totalAmounts.value);
+      newTotalAmounts[index] = amount;
+      totalAmounts.value = newTotalAmounts;
+    } else {
+      amountController.text = '';
+      final newTotalAmounts = List<int>.from(totalAmounts.value);
+      newTotalAmounts[index] = 0;
+      totalAmounts.value = newTotalAmounts;
+    }
+  }
+
+// 金額を計算するメソッド（小数点切り捨ての処理も含む）
+  int _calculateTotalAmount(List<int> totalAmounts) {
+    return totalAmounts.fold(
+        0, (previousValue, element) => previousValue + element);
+  }
+
+// 消費税を計算するメソッド
+  int _calculateTax(int totalAmount, double taxRate) {
+    return (totalAmount * taxRate).floor(); // 小数点切り捨て
   }
 }

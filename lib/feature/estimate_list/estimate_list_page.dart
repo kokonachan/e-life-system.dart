@@ -20,6 +20,7 @@ class EstimateListPage extends HookConsumerWidget {
     return Scaffold(
       backgroundColor: ColorStyle.white,
       appBar: AppBar(
+        surfaceTintColor: ColorStyle.white,
         toolbarHeight: 80,
         backgroundColor: ColorStyle.white,
         shape: Border(

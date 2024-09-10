@@ -6,10 +6,14 @@ class TableTextFormField extends StatelessWidget {
     super.key,
     required this.controller,
     this.isReadOnly = false,
+    this.totalAmount,
+    this.onChanged,
   });
 
   final TextEditingController controller;
   final bool isReadOnly;
+  final int? totalAmount;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +23,22 @@ class TableTextFormField extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: (isReadOnly)
-            ? const Align(
+            ? Align(
                 alignment: Alignment.centerRight,
-                child: Text('3,000'),
+                child: Text(
+                  totalAmount!.toString(),
+                  style: const TextStyle(
+                    color: ColorStyle.mainBlack,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               )
             : TextFormField(
                 controller: controller,
                 cursorColor: ColorStyle.grey,
                 cursorHeight: 17,
+                onChanged: onChanged,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: ColorStyle.lightGrey,
