@@ -24,4 +24,8 @@ class ColorStyle {
   static const backGroundGrey = Color(0xFFEDF0F3);
 
   static const mainGrey = Color(0xFFC2CDD6);
+
+  static const estimateColor = Color(0xFF090080);
+
+  static const estimateBackColor = Color(0xFFccffff);
 }
