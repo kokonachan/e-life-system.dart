@@ -1,21 +1,31 @@
 import 'package:e_life_system/config/utils/color/color_style.dart';
+import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class PdfEstimateBasicInfo extends pw.StatelessWidget {
-  PdfEstimateBasicInfo({required this.boldFontData});
+  PdfEstimateBasicInfo({
+    required this.boldFontData,
+    required this.doDate,
+    required this.validPeriod,
+    required this.total,
+  });
 
   final pw.Font boldFontData;
+  final String doDate;
+  final String validPeriod;
+  final String total;
 
   @override
   pw.Widget build(pw.Context context) {
+    final formatter = NumberFormat('#,###');
     return pw.Row(
       children: [
         pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            DateContainer(title: '<施行期日>'),
-            DateContainer(title: '<見積有効期間>'),
+            DateContainer(title: '<施行期日> $doDate'),
+            DateContainer(title: '<見積有効期日> $validPeriod'),
           ],
         ),
         pw.Expanded(
@@ -56,7 +66,7 @@ class PdfEstimateBasicInfo extends pw.StatelessWidget {
                   pw.Expanded(
                     child: pw.Center(
                       child: pw.Text(
-                        '¥300,000',
+                        '¥${formatter.format(int.parse(total))}',
                         style: pw.TextStyle(
                           fontSize: 18,
                           font: boldFontData,

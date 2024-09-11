@@ -15,6 +15,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
+import 'package:intl/intl.dart';
+
 class EstimateCreatePage extends HookConsumerWidget {
   const EstimateCreatePage({super.key});
 
@@ -27,7 +29,7 @@ class EstimateCreatePage extends HookConsumerWidget {
     final TextEditingController doDateController =
         useTextEditingController(); //施行期日
     final TextEditingController validPeriodController =
-        useTextEditingController(); //見積有効期間
+        useTextEditingController(); //見積有効期日
     final TextEditingController estimateNumberController =
         useTextEditingController(); //見積番号
 
@@ -39,6 +41,8 @@ class EstimateCreatePage extends HookConsumerWidget {
     final ValueNotifier<int> subtotal = useState(0);
     final ValueNotifier<int> tax = useState(0);
     final ValueNotifier<int> total = useState(0);
+
+    final formatter = NumberFormat('#,###');
 
     useEffect(() {
       controllers.value = [_createNewRow()];
@@ -123,11 +127,13 @@ class EstimateCreatePage extends HookConsumerWidget {
                       title: '施行期日',
                       counterText: '',
                       isRequired: true,
+                      isReadOnly: true,
                     ),
                     LabelAndTextFormField(
                       controller: validPeriodController,
-                      title: '見積有効期間',
+                      title: '見積有効期日',
                       counterText: '',
+                      isReadOnly: true,
                     ),
                     LabelAndTextFormField(
                       controller: estimateNumberController,
@@ -277,7 +283,7 @@ class EstimateCreatePage extends HookConsumerWidget {
                           ),
                           WidthMargin.xLarge,
                           Text(
-                            total.value.toString(),
+                            formatter.format(total.value),
                             style: const TextStyle(
                               color: ColorStyle.mainBlack,
                               fontSize: 32,
@@ -302,19 +308,18 @@ class EstimateCreatePage extends HookConsumerWidget {
                     titlePadding: 72.0,
                     onPressed: () async {
                       //PDF作成
-                      final pdf = await PdfCreator.createPdf();
-                      final pdfInBytes = await pdf.save();
-
-                      //PDFをstorageにアップロードしてURLを取得
-                      final downloadUrl = await ref
-                          .read(storageControllerProvider.notifier)
-                          .pdfUploadGetUrl(
-                            pdfInBytes: pdfInBytes,
-                          );
-
-                      if (context.mounted) {
-                        html.window.open(downloadUrl, '');
-                      }
+                      await _createPdf(
+                        estimateNumberController,
+                        doDateController,
+                        validPeriodController,
+                        total,
+                        titleController,
+                        controllers,
+                        subtotal,
+                        tax,
+                        ref,
+                        context,
+                      );
                     },
                   ),
                 ],
@@ -324,6 +329,45 @@ class EstimateCreatePage extends HookConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _createPdf(
+    TextEditingController estimateNumberController,
+    TextEditingController doDateController,
+    TextEditingController validPeriodController,
+    ValueNotifier<int> total,
+    TextEditingController titleController,
+    ValueNotifier<List<List<TextEditingController>>> controllers,
+    ValueNotifier<int> subtotal,
+    ValueNotifier<int> tax,
+    WidgetRef ref,
+    BuildContext context,
+  ) async {
+    //PDF作成
+    final pdf = await PdfCreator.createPdf(
+      estimateNumber: estimateNumberController.text,
+      doDate: doDateController.text,
+      validPeriod: validPeriodController.text,
+      total: total.value.toString(),
+      constructionTitle: titleController.text,
+      estimateContentLength: controllers.value.length,
+      subTotal: subtotal.value.toString(),
+      tax: tax.value.toString(),
+      controllers: controllers.value,
+    );
+    final pdfInBytes = await pdf.save();
+
+    //PDFをstorageにアップロードしてURLを取得
+    final downloadUrl =
+        await ref.read(storageControllerProvider.notifier).pdfUploadGetUrl(
+              pdfInBytes: pdfInBytes,
+            );
+
+    //ダウンロードリンクを開く
+    if (context.mounted) {
+      Navigator.pop(context);
+      html.window.open(downloadUrl, '');
+    }
   }
 
 // 新しい行を追加するメソッド

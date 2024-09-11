@@ -6,6 +6,7 @@ import 'package:e_life_system/feature/pdf/component/pdf_estimate_content.dart';
 import 'package:e_life_system/feature/pdf/component/pdf_estimate_title.dart';
 import 'package:e_life_system/feature/pdf/component/pdf_total_amount.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 //PDF作成クラス
@@ -26,7 +27,17 @@ class PdfCreator {
     boldFont = pw.Font.ttf(boldFontData);
   }
 
-  static Future<pw.Document> createPdf() async {
+  static Future<pw.Document> createPdf({
+    required String estimateNumber,
+    required String doDate,
+    required String validPeriod,
+    required String total,
+    required String constructionTitle,
+    required int estimateContentLength,
+    required String subTotal,
+    required String tax,
+    required List<List<TextEditingController>> controllers,
+  }) async {
     final pdf = pw.Document();
     await loadCustomFont(); // フォントの読み込みを待機
 
@@ -47,6 +58,7 @@ class PdfCreator {
     //見積タイトル
     final estimateTitle = PdfEstimateTitle(
       boldFontData: boldFont!,
+      estimateNumber: estimateNumber,
     );
 
     //導入文
@@ -65,18 +77,30 @@ class PdfCreator {
     //見積基本情報
     final estimateBasicInfo = PdfEstimateBasicInfo(
       boldFontData: boldFont!,
+      doDate: doDate,
+      validPeriod: validPeriod,
+      total: total,
     );
 
     //工事名
-    final constructionName = PdfConstructionName();
+    final constructionName = PdfConstructionName(
+      constructionTitle: constructionTitle,
+    );
 
     //項目名
     final constructionItemName = PdfConstructionItemName();
 
     //見積内容
-    final estimateContent = PdfEstimateContent();
+    final estimateContent = PdfEstimateContent(
+      controllers: controllers,
+    );
 
-    final totalAmount = PdfTotalAmount();
+    //合計金額
+    final totalAmount = PdfTotalAmount(
+      subTotal: subTotal,
+      tax: tax,
+      total: total,
+    );
 
     // `MultiPage`を使用してPDFに内容を追加
     pdf.addPage(
@@ -95,7 +119,7 @@ class PdfCreator {
             estimateBasicInfo,
             constructionName,
             constructionItemName,
-            for (int i = 0; i < 4; i++) estimateContent,
+            estimateContent,
             totalAmount,
           ];
         },

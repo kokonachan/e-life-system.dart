@@ -3,6 +3,7 @@ import 'package:e_life_system/feature/estimate_list/estimate_list_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,15 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Zen_Kaku_Gothic_Antique',
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ja'),
+        Locale('en'),
+      ],
       home: const EstimateListPage(),
     );
   }

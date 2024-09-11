@@ -3,7 +3,9 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class PdfConstructionName extends pw.StatelessWidget {
-  PdfConstructionName();
+  PdfConstructionName({required this.constructionTitle});
+
+  final String constructionTitle;
 
   @override
   pw.Widget build(pw.Context context) {
@@ -30,7 +32,7 @@ class PdfConstructionName extends pw.StatelessWidget {
             child: pw.Padding(
               padding: const pw.EdgeInsets.all(2.0),
               child: pw.Text(
-                '<工事名> 水道工事の名称',
+                '<工事名> $constructionTitle',
                 style: const pw.TextStyle(
                   fontSize: 15,
                 ),

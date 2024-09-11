@@ -5,9 +5,11 @@ import 'package:pdf/widgets.dart' as pw;
 class PdfEstimateTitle extends pw.StatelessWidget {
   PdfEstimateTitle({
     required this.boldFontData,
+    required this.estimateNumber,
   });
 
   final pw.Font boldFontData;
+  final String estimateNumber;
 
   @override
   pw.Widget build(pw.Context context) {
@@ -53,7 +55,7 @@ class PdfEstimateTitle extends pw.StatelessWidget {
               pw.Align(
                 alignment: pw.Alignment.centerRight,
                 child: pw.Text(
-                  '見積書番号：20220001',
+                  '見積書番号：$estimateNumber',
                   style: pw.TextStyle(
                     fontSize: 10,
                     color: PdfColor.fromInt(ColorStyle.estimateColor.value),

@@ -1,12 +1,22 @@
 import 'package:e_life_system/config/utils/color/color_style.dart';
+import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class PdfTotalAmount extends pw.StatelessWidget {
-  PdfTotalAmount();
+  PdfTotalAmount({
+    required this.subTotal,
+    required this.tax,
+    required this.total,
+  });
+
+  final String subTotal;
+  final String tax;
+  final String total;
 
   @override
   pw.Widget build(pw.Context context) {
+    final formatter = NumberFormat('#,###');
     return pw.Align(
       alignment: pw.Alignment.centerRight,
       child: pw.Padding(
@@ -47,7 +57,16 @@ class PdfTotalAmount extends pw.StatelessWidget {
                     pw.Expanded(
                       child: pw.Center(
                         child: pw.Text(
-                          '¥300,000',
+                          '¥${formatter.format(
+                            int.parse(
+                              switchAmount(
+                                i: i,
+                                subTotal: subTotal,
+                                tax: tax,
+                                total: total,
+                              ),
+                            ),
+                          )}',
                           style: const pw.TextStyle(
                             fontSize: 11,
                           ),
@@ -74,5 +93,23 @@ String switchText(int i) {
       return '合計';
     default:
       return '';
+  }
+}
+
+String switchAmount({
+  required int i,
+  required String subTotal,
+  required String tax,
+  required String total,
+}) {
+  switch (i) {
+    case 0:
+      return subTotal;
+    case 1:
+      return tax;
+    case 2:
+      return total;
+    default:
+      return '0';
   }
 }

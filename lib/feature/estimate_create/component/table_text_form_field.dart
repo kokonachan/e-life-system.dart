@@ -1,5 +1,6 @@
 import 'package:e_life_system/config/utils/color/color_style.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TableTextFormField extends StatelessWidget {
   const TableTextFormField({
@@ -17,6 +18,7 @@ class TableTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat('#,###');
     return Container(
       height: 55,
       color: ColorStyle.white,
@@ -26,7 +28,7 @@ class TableTextFormField extends StatelessWidget {
             ? Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  totalAmount!.toString(),
+                  '¥${formatter.format(totalAmount)}',
                   style: const TextStyle(
                     color: ColorStyle.mainBlack,
                     fontSize: 16,

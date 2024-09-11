@@ -1,5 +1,6 @@
 import 'package:e_life_system/config/utils/color/color_style.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TotalMoneyTableRow extends StatelessWidget {
   const TotalMoneyTableRow({
@@ -13,6 +14,9 @@ class TotalMoneyTableRow extends StatelessWidget {
 
   // カスタムメソッドで TableRow を返す
   TableRow toTableRow() {
+    final formatter = NumberFormat('#,###');
+    final formattedResult = formatter.format(result);
+
     return TableRow(
       children: [
         Container(
@@ -37,7 +41,7 @@ class TotalMoneyTableRow extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                result.toString(),
+                '¥$formattedResult',
                 style: const TextStyle(
                   color: ColorStyle.mainBlack,
                   fontSize: 16,
