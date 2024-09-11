@@ -1,5 +1,5 @@
-import 'package:e_life_system/common/color/color_style.dart';
-import 'package:e_life_system/common/margin/height_margin.dart';
+import 'package:e_life_system/config/utils/color/color_style.dart';
+import 'package:e_life_system/config/utils/margin/height_margin.dart';
 import 'package:e_life_system/feature/estimate_create/estimate_create_page.dart';
 import 'package:e_life_system/feature/estimate_list/component/estimate_tile.dart';
 import 'package:e_life_system/feature/estimate_list/component/item_title_text.dart';

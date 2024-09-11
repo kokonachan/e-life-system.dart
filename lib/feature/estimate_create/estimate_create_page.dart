@@ -1,15 +1,19 @@
-import 'package:e_life_system/common/color/color_style.dart';
-import 'package:e_life_system/common/margin/height_margin.dart';
-import 'package:e_life_system/common/margin/width_margin.dart';
+import 'package:e_life_system/config/utils/color/color_style.dart';
+import 'package:e_life_system/config/utils/margin/height_margin.dart';
+import 'package:e_life_system/config/utils/margin/width_margin.dart';
 import 'package:e_life_system/feature/estimate_create/component/label_and_text_form_field.dart';
 import 'package:e_life_system/feature/estimate_create/component/page_title_text.dart';
 import 'package:e_life_system/feature/estimate_create/component/table_item_title.dart';
 import 'package:e_life_system/feature/estimate_create/component/table_text_form_field.dart';
 import 'package:e_life_system/feature/estimate_create/component/total_money_table_row.dart';
+import 'package:e_life_system/feature/pdf/pdf_creater.dart';
+import 'package:e_life_system/feature/storage/controller/storage_controller.dart';
 import 'package:e_life_system/function/custom_pink_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 class EstimateCreatePage extends HookConsumerWidget {
   const EstimateCreatePage({super.key});
@@ -296,7 +300,22 @@ class EstimateCreatePage extends HookConsumerWidget {
                   CustomPinkButton(
                     title: '保存',
                     titlePadding: 72.0,
-                    onPressed: () {},
+                    onPressed: () async {
+                      //PDF作成
+                      final pdf = await PdfCreator.createPdf();
+                      final pdfInBytes = await pdf.save();
+
+                      //PDFをstorageにアップロードしてURLを取得
+                      final downloadUrl = await ref
+                          .read(storageControllerProvider.notifier)
+                          .pdfUploadGetUrl(
+                            pdfInBytes: pdfInBytes,
+                          );
+
+                      if (context.mounted) {
+                        html.window.open(downloadUrl, '');
+                      }
+                    },
                   ),
                 ],
               ),
@@ -318,7 +337,7 @@ class EstimateCreatePage extends HookConsumerWidget {
     totalAmounts.value = [...totalAmounts.value, 0];
   }
 
-//各行の金額を計算するメソッド
+  //各行の金額を計算するメソッド
   void _calculateAmount(
       int index,
       ValueNotifier<List<List<TextEditingController>>> controllers,

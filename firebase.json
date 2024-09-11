@@ -1,13 +1,1 @@
-{
-  "hosting": {
-    "public": "build/web",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
-  },
-  "storage": {
-    "rules": "storage.rules"
-  }
-}
+{"hosting":{"public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"]},"storage":{"rules":"storage.rules"},"flutter":{"platforms":{"ios":{"default":{"projectId":"e-life-system","appId":"1:782601085409:ios:77e8f637d6d2e77028f2a0","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"e-life-system","configurations":{"ios":"1:782601085409:ios:77e8f637d6d2e77028f2a0","web":"1:782601085409:web:2283bc315152aa6e28f2a0"}}}}}}

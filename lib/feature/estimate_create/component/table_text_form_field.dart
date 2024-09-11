@@ -1,4 +1,4 @@
-import 'package:e_life_system/common/color/color_style.dart';
+import 'package:e_life_system/config/utils/color/color_style.dart';
 import 'package:flutter/material.dart';
 
 class TableTextFormField extends StatelessWidget {

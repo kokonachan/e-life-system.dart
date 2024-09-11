@@ -1,5 +1,5 @@
-import 'package:e_life_system/common/color/color_style.dart';
-import 'package:e_life_system/common/margin/width_margin.dart';
+import 'package:e_life_system/config/utils/color/color_style.dart';
+import 'package:e_life_system/config/utils/margin/width_margin.dart';
 import 'package:e_life_system/feature/estimate_list/data/estimate_data.dart';
 import 'package:flutter/material.dart';
 
