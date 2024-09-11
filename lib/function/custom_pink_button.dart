@@ -33,7 +33,7 @@ class CustomPinkButton extends StatelessWidget {
             style: const TextStyle(
               color: ColorStyle.white,
               fontSize: 20,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               letterSpacing: 1.2,
             ),
           ),

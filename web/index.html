@@ -18,13 +18,16 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="イーライフ見積システム">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="e_life_system">
+  <meta name="apple-mobile-web-app-title" content="イーライフ見積もりシステム">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta property="og:title" content="イーライフ見積もりシステム">
+  <meta property="og:description" content="見積書を簡単かつ効率的に作成することができ、作成した見積書を一覧でご覧いただけます。見積もり作業の効率化に貢献します。">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
@@ -32,6 +35,24 @@
   <title>e_life_system</title>
   <link rel="manifest" href="manifest.json">
 </head>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('flutter-first-frame', function () {
+      navigator.serviceWorker.register('flutter_service_worker.js').then(registration => {
+        //登録成功
+        registration.onupdatefound = function () {
+          console.log('Update found');
+          registration.update();
+        }
+      })
+        .catch(err => {
+          //登録失敗
+        });
+    });
+  }
+</script>
+
 <body>
   <script src="flutter_bootstrap.js" async></script>
 </body>

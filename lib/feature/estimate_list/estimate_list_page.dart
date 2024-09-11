@@ -54,7 +54,7 @@ class EstimateListPage extends HookConsumerWidget {
                   style: TextStyle(
                     color: ColorStyle.mainBlack,
                     fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 CustomPinkButton(
@@ -76,38 +76,42 @@ class EstimateListPage extends HookConsumerWidget {
               color: ColorStyle.dividerGrey,
               height: 1,
             ),
-            HeightMargin.medium,
-            SearchTextFormField(controller: controller),
-            HeightMargin.large,
-            Row(
-              children: [
-                ItemTitleText(
-                  title: 'ステータス',
-                  width: size.width * 0.15,
-                ),
-                const Expanded(
-                  child: ItemTitleText(title: '件名'),
-                ),
-                ItemTitleText(
-                  title: '作成日',
-                  width: size.width * 0.2,
-                ),
-                ItemTitleText(
-                  title: '金額',
-                  width: size.width * 0.2,
-                ),
-              ],
-            ),
-            HeightMargin.normal,
-            const Divider(
-              color: ColorStyle.mainGrey,
-              height: 1,
-            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    for (int i = 0; i < 10; i++) EstimateTile(index: i),
+                    HeightMargin.medium,
+                    SearchTextFormField(controller: controller),
+                    HeightMargin.large,
+                    Row(
+                      children: [
+                        ItemTitleText(
+                          title: 'ステータス',
+                          width: size.width * 0.15,
+                        ),
+                        const Expanded(
+                          child: ItemTitleText(title: '件名'),
+                        ),
+                        ItemTitleText(
+                          title: '作成日',
+                          width: size.width * 0.2,
+                        ),
+                        ItemTitleText(
+                          title: '金額',
+                          width: size.width * 0.2,
+                        ),
+                      ],
+                    ),
+                    HeightMargin.normal,
+                    const Divider(
+                      color: ColorStyle.mainGrey,
+                      height: 1,
+                    ),
+                    Column(
+                      children: [
+                        for (int i = 0; i < 10; i++) EstimateTile(index: i),
+                      ],
+                    ),
                   ],
                 ),
               ),

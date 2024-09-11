@@ -28,7 +28,7 @@ class TotalMoneyTableRow extends StatelessWidget {
               style: const TextStyle(
                 color: ColorStyle.mainBlack,
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -45,7 +45,7 @@ class TotalMoneyTableRow extends StatelessWidget {
                 style: const TextStyle(
                   color: ColorStyle.mainBlack,
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),

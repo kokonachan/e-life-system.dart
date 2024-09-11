@@ -20,7 +20,7 @@ class PageTitleText extends StatelessWidget {
           style: const TextStyle(
             color: ColorStyle.mainBlack,
             fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
           ),
         ),
         HeightMargin.small,

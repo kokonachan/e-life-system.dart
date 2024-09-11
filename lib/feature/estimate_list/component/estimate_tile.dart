@@ -36,7 +36,6 @@ class EstimateTile extends StatelessWidget {
                       style: const TextStyle(
                         color: ColorStyle.mainBlack,
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
@@ -51,7 +50,7 @@ class EstimateTile extends StatelessWidget {
                       style: const TextStyle(
                         color: ColorStyle.mainBlue,
                         fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
@@ -83,7 +82,7 @@ class EstimateTile extends StatelessWidget {
                     style: const TextStyle(
                       color: ColorStyle.mainBlack,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),

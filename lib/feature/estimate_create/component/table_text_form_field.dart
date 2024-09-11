@@ -32,7 +32,7 @@ class TableTextFormField extends StatelessWidget {
                   style: const TextStyle(
                     color: ColorStyle.mainBlack,
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               )

@@ -16,6 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:html' as html;
 
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class EstimateCreatePage extends HookConsumerWidget {
   const EstimateCreatePage({super.key});
@@ -23,6 +24,10 @@ class EstimateCreatePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
+
+    final controller = useAnimationController(
+      duration: const Duration(milliseconds: 1500),
+    );
 
     final TextEditingController titleController =
         useTextEditingController(); //見積もり件名
@@ -44,6 +49,8 @@ class EstimateCreatePage extends HookConsumerWidget {
 
     final formatter = NumberFormat('#,###');
 
+    final ValueNotifier<bool> isLoading = useState(false);
+
     useEffect(() {
       controllers.value = [_createNewRow()];
       totalAmounts.value = [0];
@@ -58,6 +65,25 @@ class EstimateCreatePage extends HookConsumerWidget {
 
       return null;
     }, [totalAmounts.value]);
+
+    if (isLoading.value) {
+      return Scaffold(
+        backgroundColor: ColorStyle.white,
+        body: Center(
+          child: SizedBox(
+            width: 120,
+            height: 120,
+            child: Lottie.asset(
+              'assets/animations/loading.json',
+              controller: controller,
+              onLoaded: (composition) {
+                controller.repeat();
+              },
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: ColorStyle.white,
@@ -97,7 +123,7 @@ class EstimateCreatePage extends HookConsumerWidget {
                     style: TextStyle(
                       fontSize: 16,
                       color: ColorStyle.mainBlack,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -213,7 +239,7 @@ class EstimateCreatePage extends HookConsumerWidget {
                               style: TextStyle(
                                 fontSize: 16,
                                 color: ColorStyle.white,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
@@ -278,7 +304,7 @@ class EstimateCreatePage extends HookConsumerWidget {
                             style: TextStyle(
                               color: ColorStyle.mainBlack,
                               fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           WidthMargin.xLarge,
@@ -287,7 +313,7 @@ class EstimateCreatePage extends HookConsumerWidget {
                             style: const TextStyle(
                               color: ColorStyle.mainBlack,
                               fontSize: 32,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           WidthMargin.mini,
@@ -296,7 +322,7 @@ class EstimateCreatePage extends HookConsumerWidget {
                             style: TextStyle(
                               color: ColorStyle.mainBlack,
                               fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w500,
                             ),
                           )
                         ],
@@ -317,6 +343,7 @@ class EstimateCreatePage extends HookConsumerWidget {
                         controllers,
                         subtotal,
                         tax,
+                        isLoading,
                         ref,
                         context,
                       );
@@ -340,9 +367,11 @@ class EstimateCreatePage extends HookConsumerWidget {
     ValueNotifier<List<List<TextEditingController>>> controllers,
     ValueNotifier<int> subtotal,
     ValueNotifier<int> tax,
+    ValueNotifier<bool> isLoading,
     WidgetRef ref,
     BuildContext context,
   ) async {
+    isLoading.value = true; //ローディング開始
     //PDF作成
     final pdf = await PdfCreator.createPdf(
       estimateNumber: estimateNumberController.text,
@@ -363,10 +392,12 @@ class EstimateCreatePage extends HookConsumerWidget {
               pdfInBytes: pdfInBytes,
             );
 
+    isLoading.value = false; //ローディング終了
+
     //ダウンロードリンクを開く
     if (context.mounted) {
       Navigator.pop(context);
-      html.window.open(downloadUrl, '');
+      html.window.location.href = downloadUrl;
     }
   }
 

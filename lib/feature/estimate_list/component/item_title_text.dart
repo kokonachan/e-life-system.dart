@@ -22,7 +22,7 @@ class ItemTitleText extends StatelessWidget {
           style: const TextStyle(
             fontSize: 16,
             color: ColorStyle.mainGrey,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
