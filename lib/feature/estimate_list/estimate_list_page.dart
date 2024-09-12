@@ -41,12 +41,12 @@ class EstimateListPage extends HookConsumerWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          children: [
-            HeightMargin.large,
-            Row(
+      body: Column(
+        children: [
+          HeightMargin.large,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
@@ -71,13 +71,16 @@ class EstimateListPage extends HookConsumerWidget {
                 ),
               ],
             ),
-            HeightMargin.medium,
-            const Divider(
-              color: ColorStyle.dividerGrey,
-              height: 1,
-            ),
-            Expanded(
-              child: SingleChildScrollView(
+          ),
+          HeightMargin.medium,
+          const Divider(
+            color: ColorStyle.dividerGrey,
+            height: 1,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   children: [
                     HeightMargin.medium,
@@ -116,8 +119,8 @@ class EstimateListPage extends HookConsumerWidget {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
